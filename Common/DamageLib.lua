@@ -57,7 +57,7 @@ end
 
 function CalcPhysicalDamage(source, target, amount)
   local ArmorPenPercent = source.armorPenPercent
-  local ArmorPenFlat = source.armorPen
+  local ArmorPenFlat = (0.4 + target.levelData.lvl / 30) * source.armorPen
   local BonusArmorPen = source.bonusArmorPenPercent
 
   if source.type == Obj_AI_Minion then
@@ -115,16 +115,32 @@ function DamageReductionMod(source,target,amount,DamageType)
     end
   end
 
-  if source.type == Obj_AI_Hero and target then
+  if target.type == Obj_AI_Hero then
+
+    for i = 0, target.buffCount do
+      if target:GetBuff(i).count > 0 then
+        local buff = target:GetBuff(i)
+        if buff.name == "MasteryWardenOfTheDawn" then
+          amount = amount * (1 - (0.06 * buff.count))
+        end
     
-    local BoSCount = GotBuff(target, "MasteryWardenOfTheDawn")
-    if BoSCount > 0 then
-      amount = amount * (1 - (0.06 * BoSCount))
-    end
-    
-    if DamageReductionTable[target.charName] then
-      if GotBuff(target, DamageReductionTable[target.charName].buff) > 0 and (not DamageReductionTable[target.charName].damagetype or DamageReductionTable[target.charName].damagetype == DamageType) then
-        amount = amount * DamageReductionTable[target.charName].amount(target)
+        if DamageReductionTable[target.charName] then
+          if buff.name == DamageReductionTable[target.charName].buff and (not DamageReductionTable[target.charName].damagetype or DamageReductionTable[target.charName].damagetype == DamageType) then
+            amount = amount * DamageReductionTable[target.charName].amount(target)
+          end
+        end
+
+        if target.charName == "Maokai" and source.type ~= Obj_AI_Turret then
+          if buff.name == "MaokaiDrainDefense" > 0 then
+            amount = amount * 0.8
+          end
+        end
+
+        if target.charName == "MasterYi" then
+          if buff.name == "Meditate" > 0 then
+            amount = amount - amount * ({0.5, 0.55, 0.6, 0.65, 0.7})[target:GetSpellData(_W).level] / (source.type == Obj_AI_Turret and 2 or 1)
+          end
+        end
       end
     end
 
@@ -135,20 +151,8 @@ function DamageReductionMod(source,target,amount,DamageType)
     if target.charName == "Kassadin" and DamageType == 2 then
       amount = amount * 0.85
     end
-
-    if target.charName == "Maokai" and source.type ~= Obj_AI_Turret then
-      if GotBuff(target, "MaokaiDrainDefense") > 0 then
-        amount = amount * 0.8
-      end
-    end
-
-    if target.charName == "MasterYi" then
-      if GotBuff(target, "Meditate") > 0 then
-        amount = amount - amount * ({0.5, 0.55, 0.6, 0.65, 0.7})[target:GetSpellData(_W).level] / (source.type == Obj_AI_Turret and 2 or 1)
-      end
-    end
-
   end
+
   return amount
 end
 
