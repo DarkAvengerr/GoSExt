@@ -14,6 +14,8 @@ local DamageReductionTable = {
   ["Galio"] = {buff = "GalioIdolOfDurand", amount = 0.5},
   ["Garen"] = {buff = "GarenW", amount = 0.7},
   ["Gragas"] = {buff = "GragasWSelf", amount = ({0.1, 0.12, 0.14, 0.16, 0.18})[target:GetSpellData(_W).level]},
+  ["Annie"] = {buff = "MoltenShield", amount = 1 - ({0.16,0.22,0.28,0.34,0.4})[target:GetSpellData(_E).level]},
+  ["Malzahar"] = {buff = "malzaharpassiveshield", amount = 0.1}
 }
 
 function GetPercentHP(unit)
