@@ -6,6 +6,16 @@ params:
 getdmg("SKILL",target,source,stagedmg,spelllvl)
 ]]
 
+local DamageReductionTable = {
+  ["Braum"] = {buff = "BraumShieldRaise", amount = 1 - ({0.3, 0.325, 0.35, 0.375, 0.4})[target:GetSpellData(_E).level]},
+  ["Urgot"] = {buff = "urgotswapdef", amount = 1 - ({0.3, 0.4, 0.5})[target:GetSpellData(_R).level]},
+  ["Alistar"] = {buff = "Ferocious Howl", amount = ({0.5, 0.4, 0.3})[target:GetSpellData(_R).level]},
+  ["Amumu"] = {buff = "Tantrum", amount = ({2, 4, 6, 8, 10})[target:GetSpellData(_E).level], damageType = 1},
+  ["Galio"] = {buff = "GalioIdolOfDurand", amount = 0.5},
+  ["Garen"] = {buff = "GarenW", amount = 0.7},
+  ["Gragas"] = {buff = "GragasWSelf", amount = ({0.1, 0.12, 0.14, 0.16, 0.18})[target:GetSpellData(_W).level]},
+}
+
 function GetPercentHP(unit)
   return 100 * unit.health / unit.maxHealth
 end
@@ -99,16 +109,6 @@ end
 function DamageReductionMod(source,target,amount,DamageType)
   if source.type == Obj_AI_Hero and target then
     
-    local DamageReductionTable = {
-      ["Braum"] = {buff = "BraumShieldRaise", amount = 1 - ({0.3, 0.325, 0.35, 0.375, 0.4})[target:GetSpellData(_E).level]},
-      ["Urgot"] = {buff = "urgotswapdef", amount = 1 - ({0.3, 0.4, 0.5})[target:GetSpellData(_R).level]},
-      ["Alistar"] = {buff = "Ferocious Howl", amount = ({0.5, 0.4, 0.3})[target:GetSpellData(_R).level]},
-      ["Amumu"] = {buff = "Tantrum", amount = ({2, 4, 6, 8, 10})[target:GetSpellData(_E).level], damageType = 1},
-      ["Galio"] = {buff = "GalioIdolOfDurand", amount = 0.5},
-      ["Garen"] = {buff = "GarenW", amount = 0.7},
-      ["Gragas"] = {buff = "GragasWSelf", amount = ({0.1, 0.12, 0.14, 0.16, 0.18})[target:GetSpellData(_W).level]},
-    }
-
     local BoSCount = GotBuff(target, "MasteryWardenOfTheDawn")
     if BoSCount > 0 then
       amount = amount * (1 - (0.06 * BoSCount))
