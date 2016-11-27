@@ -7,15 +7,15 @@ getdmg("SKILL",target,source,stagedmg,spelllvl)
 ]]
 
 local DamageReductionTable = {
-  ["Braum"] = {buff = "BraumShieldRaise", amount = 1 - ({0.3, 0.325, 0.35, 0.375, 0.4})[target:GetSpellData(_E).level]},
-  ["Urgot"] = {buff = "urgotswapdef", amount = 1 - ({0.3, 0.4, 0.5})[target:GetSpellData(_R).level]},
-  ["Alistar"] = {buff = "Ferocious Howl", amount = ({0.5, 0.4, 0.3})[target:GetSpellData(_R).level]},
-  ["Amumu"] = {buff = "Tantrum", amount = ({2, 4, 6, 8, 10})[target:GetSpellData(_E).level], damageType = 1},
-  ["Galio"] = {buff = "GalioIdolOfDurand", amount = 0.5},
-  ["Garen"] = {buff = "GarenW", amount = 0.7},
-  ["Gragas"] = {buff = "GragasWSelf", amount = ({0.1, 0.12, 0.14, 0.16, 0.18})[target:GetSpellData(_W).level]},
-  ["Annie"] = {buff = "MoltenShield", amount = 1 - ({0.16,0.22,0.28,0.34,0.4})[target:GetSpellData(_E).level]},
-  ["Malzahar"] = {buff = "malzaharpassiveshield", amount = 0.1}
+  ["Braum"] = {buff = "BraumShieldRaise", amount = function(target) return 1 - ({0.3, 0.325, 0.35, 0.375, 0.4})[target:GetSpellData(_E).level] end},
+  ["Urgot"] = {buff = "urgotswapdef", amount = function(target) return 1 - ({0.3, 0.4, 0.5})[target:GetSpellData(_R).level] end},
+  ["Alistar"] = {buff = "Ferocious Howl", amount = function(target) return ({0.5, 0.4, 0.3})[target:GetSpellData(_R).level] end},
+  ["Amumu"] = {buff = "Tantrum", amount = function(target) return ({2, 4, 6, 8, 10})[target:GetSpellData(_E).level], damageType = 1 end},
+  ["Galio"] = {buff = "GalioIdolOfDurand", amount = function(target) return 0.5 end},
+  ["Garen"] = {buff = "GarenW", amount = function(target) return 0.7 end},
+  ["Gragas"] = {buff = "GragasWSelf", amount = function(target) return ({0.1, 0.12, 0.14, 0.16, 0.18})[target:GetSpellData(_W).level] end},
+  ["Annie"] = {buff = "MoltenShield", amount = function(target) return 1 - ({0.16,0.22,0.28,0.34,0.4})[target:GetSpellData(_E).level] end},
+  ["Malzahar"] = {buff = "malzaharpassiveshield", amount = function(target) return 0.1 end}
 }
 
 function GetPercentHP(unit)
@@ -109,6 +109,12 @@ function CalcMagicalDamage(source, target, amount)
 end
 
 function DamageReductionMod(source,target,amount,DamageType)
+  if source.type == Obj_AI_Hero then
+    if GotBuff(source, "Exhaust") > 0 then
+      amount = amount * 0.6
+    end
+  end
+
   if source.type == Obj_AI_Hero and target then
     
     local BoSCount = GotBuff(target, "MasteryWardenOfTheDawn")
@@ -118,12 +124,8 @@ function DamageReductionMod(source,target,amount,DamageType)
     
     if DamageReductionTable[target.charName] then
       if GotBuff(target, DamageReductionTable[target.charName].buff) > 0 and (not DamageReductionTable[target.charName].damagetype or DamageReductionTable[target.charName].damagetype == DamageType) then
-        amount = amount * DamageReductionTable[target.charName].amount
+        amount = amount * DamageReductionTable[target.charName].amount(target)
       end
-    end
-
-    if GotBuff(source, "Exhaust") > 0 then
-      amount = amount * 0.6
     end
 
     if GetItemSlot(target, 1054) > 0 then
@@ -146,11 +148,6 @@ function DamageReductionMod(source,target,amount,DamageType)
       end
     end
 
-    if target.charName == "Shen" and DamageType == 1 then
-      if GotBuff(target, "Shen Shadow Dash") > 0 and GotBuff(source, "Taunt") > 0 then
-        amount = amount * 0.5
-      end
-    end
   end
   return amount
 end
