@@ -99,17 +99,25 @@ end
 function DamageReductionMod(source,target,amount,DamageType)
   if source.type == Obj_AI_Hero and target then
     
+    local DamageReductionTable = {
+      ["Braum"] = {buff = "BraumShieldRaise", amount = 1 - ({0.3, 0.325, 0.35, 0.375, 0.4})[target:GetSpellData(_E).level]},
+      ["Urgot"] = {buff = "urgotswapdef", amount = 1 - ({0.3, 0.4, 0.5})[target:GetSpellData(_R).level]},
+      ["Alistar"] = {buff = "Ferocious Howl", amount = ({0.5, 0.4, 0.3})[target:GetSpellData(_R).level]},
+      ["Amumu"] = {buff = "Tantrum", amount = ({2, 4, 6, 8, 10})[target:GetSpellData(_E).level], damageType = 1},
+      ["Galio"] = {buff = "GalioIdolOfDurand", amount = 0.5},
+      ["Garen"] = {buff = "GarenW", amount = 0.7},
+      ["Gragas"] = {buff = "GragasWSelf", amount = ({0.1, 0.12, 0.14, 0.16, 0.18})[target:GetSpellData(_W).level]},
+    }
+
     local BoSCount = GotBuff(target, "MasteryWardenOfTheDawn")
     if BoSCount > 0 then
       amount = amount * (1 - (0.06 * BoSCount))
     end
-
-    if GotBuff(target, "BraumShieldRaise") > 0 then
-      amount = amount * (1 - ({0.3, 0.325, 0.35, 0.375, 0.4})[target:GetSpellData(_E).level])
-    end
-
-    if GotBuff(target, "urgotswapdef") > 0 then
-      amount = amount * (1 - ({0.3, 0.4, 0.5})[target:GetSpellData(_R).level])
+    
+    if DamageReductionTable[target.charName] then
+      if GotBuff(target, DamageReductionTable[target.charName].buff) > 0 and (not DamageReductionTable[target.charName].damagetype or DamageReductionTable[target.charName].damagetype == DamageType) then
+        amount = amount * DamageReductionTable[target.charName].amount
+      end
     end
 
     if GotBuff(source, "Exhaust") > 0 then
@@ -120,44 +128,26 @@ function DamageReductionMod(source,target,amount,DamageType)
       amount = amount - 8
     end
 
-    if GotBuff(target, "Ferocious Howl") > 0 then
-      amount = amount * ({0.5, 0.4, 0.3})[target:GetSpellData(_R).level]
-    end
-
-    if GotBuff(target, "Tantrum") > 0 and DamageType == 1 then
-      amount = amount - ({2, 4, 6, 8, 10})[target:GetSpellData(_E).level]
-    end
-
-    if GotBuff(target, "GalioIdolOfDurand") > 0 then
-      amount = amount * 0.5
-    end
-
-    if GotBuff(target, "GarenW") > 0 then
-      amount = amount * 0.7
-    end
-
-    if GotBuff(target, "GragasWSelf") > 0 then
-      amount = amount - amount * ({0.1, 0.12, 0.14, 0.16, 0.18})[target:GetSpellData(_W).level]
-    end
-
-    if GotBuff(target, "VoidStone") > 0 and DamageType == 2 then
+    if target.charName == "Kassadin" and DamageType == 2 then
       amount = amount * 0.85
     end
 
-    if GotBuff(target, "KatarinaEReduction") > 0 then
-      amount = amount * 0.85
+    if target.charName == "Maokai" and source.type ~= Obj_AI_Turret then
+      if GotBuff(target, "MaokaiDrainDefense") > 0 then
+        amount = amount * 0.8
+      end
     end
 
-    if GotBuff(target, "MaokaiDrainDefense") > 0 and source.type ~= Obj_AI_Turret then
-      amount = amount * 0.8
+    if target.charName == "MasterYi" then
+      if GotBuff(target, "Meditate") > 0 then
+        amount = amount - amount * ({0.5, 0.55, 0.6, 0.65, 0.7})[target:GetSpellData(_W).level] / (source.type == Obj_AI_Turret and 2 or 1)
+      end
     end
 
-    if GotBuff(target, "Meditate") > 0 then
-      amount = amount - amount * ({0.5, 0.55, 0.6, 0.65, 0.7})[target:GetSpellData(_W).level] / (source.type == Obj_AI_Turret and 2 or 1)
-    end
-
-    if GotBuff(target, "Shen Shadow Dash") > 0 and GotBuff(source, "Taunt") > 0 and DamageType == 1 then
-      amount = amount * 0.5
+    if target.charName == "Shen" and DamageType == 1 then
+      if GotBuff(target, "Shen Shadow Dash") > 0 and GotBuff(source, "Taunt") > 0 then
+        amount = amount * 0.5
+      end
     end
   end
   return amount
