@@ -85,7 +85,7 @@ function CalcPhysicalDamage(source, target, amount)
   end
 
   local armor = target.armor
-  local bonusArmor = target.armor -- - target.baseArmor
+  local bonusArmor = target.armor - target.baseArmor
   local value = 100 / (100 + (armor * ArmorPenPercent) - (bonusArmor * (1 - BonusArmorPen)) - ArmorPenFlat)
 
   if armor < 0 then
