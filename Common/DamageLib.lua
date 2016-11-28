@@ -503,7 +503,7 @@ local DamageLibTable = {
 
   ["Kayle"] = {
     {Slot = "Q", Stage = 1, DamageType = 2, Damage = function(source, target, level) return ({60, 110, 160, 210, 260})[level] + source.totalDamage + 0.6 * source.ap end},
-    {Slot = "E", Stage = 1, DamageType = 2, Damage = function(source, target, level) return GotBuff(source, "judicatorrighteousfury") > 0 and ({20, 30, 40, 50, 60})[level] + 0.30 * source.ap or ({10, 15, 20, 25, 30})[level] + 0.15 * source.ap end},
+    {Slot = "E", Stage = 1, DamageType = 2, Damage = function(source, target, level) return source.range > 500 and ({20, 30, 40, 50, 60})[level] + 0.30 * source.ap or ({10, 15, 20, 25, 30})[level] + 0.15 * source.ap end},
   },
 
   ["Kennen"] = {
