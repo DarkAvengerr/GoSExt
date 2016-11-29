@@ -137,7 +137,7 @@ function DamageReductionMod(source,target,amount,DamageType)
         end
 
         if target.charName == "MasterYi" then
-          if buff.name == "Meditate" > 0 then
+          if buff.name == "Meditate" then
             amount = amount - amount * ({0.5, 0.55, 0.6, 0.65, 0.7})[target:GetSpellData(_W).level] / (source.type == Obj_AI_Turret and 2 or 1)
           end
         end
