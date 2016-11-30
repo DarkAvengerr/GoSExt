@@ -85,7 +85,7 @@ function CalcPhysicalDamage(source, target, amount)
   end
 
   local armor = target.armor
-  local bonusArmor = target.armor - target.baseArmor
+  local bonusArmor = target.bonusArmor
   local value = 100 / (100 + (armor * ArmorPenPercent) - (bonusArmor * (1 - BonusArmorPen)) - ArmorPenFlat)
 
   if armor < 0 then
@@ -588,7 +588,7 @@ local DamageLibTable = {
 
   ["Malphite"] = {
     {Slot = "Q", Stage = 1, DamageType = 2, Damage = function(source, target, level) return ({70, 120, 170, 220, 270})[level] + 0.6 * source.ap end},
-    {Slot = "W", Stage = 1, DamageType = 1, Damage = function(source, target, level) return ({30, 38, 46, 54, 62})[level] / 100 * source.totalDamage + 0.15 * (source.armor - source.baseArmor) end},
+    {Slot = "W", Stage = 1, DamageType = 1, Damage = function(source, target, level) return ({30, 38, 46, 54, 62})[level] / 100 * source.totalDamage + 0.15 * source.bonusArmor end},
     {Slot = "E", Stage = 1, DamageType = 2, Damage = function(source, target, level) return ({60, 100, 140, 180, 220})[level] + 0.3 * source.armor + 0.2 * source.ap end},
     {Slot = "R", Stage = 1, DamageType = 2, Damage = function(source, target, level) return ({200, 300, 400})[level] + source.ap end},
   },
