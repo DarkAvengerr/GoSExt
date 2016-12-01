@@ -201,7 +201,7 @@ function BaseUlt2:Tick()
 			local timeToRecall = self:GetRecallData(enemy).timeToRecall
             		if timeToRecall >= timeToHit then
             			self.IncomingDamages[myHero.networkID] = self:GetUltimateData(myHero).Damage(myHero, enemy)
-            		elseif timeToRecall < timeToHit then
+            		else
             			self.IncomingDamages[myHero.networkID] = 0
             		end
             		if self:GetTotalDamage() < self:GetPredictedHealth(enemy, timeToRecall) then return end
