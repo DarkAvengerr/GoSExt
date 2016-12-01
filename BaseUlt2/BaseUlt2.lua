@@ -115,7 +115,7 @@ function BaseUlt2:GetPredictedHealth(unit, time)
 	    	end
 	elseif unit.charName == "Blitzcrank" then
 		if GotBuff(unit, "manabarriericon") > 0 then
-			shield = unit.visible and unit.mana or unit.mana+unit.mpRegen*(Game.Timer()-self.EnemyData[unit.networkID]+time) * 0.5
+			shield = (unit.visible and unit.mana or unit.mana+unit.mpRegen*(Game.Timer()-self.EnemyData[unit.networkID]+time)) * 0.5
 		end
 	end
 	if unit.visible then return unit.health+shield end
