@@ -170,7 +170,6 @@ end
 
 function BaseUlt2:Tick()
 	for i, enemy in pairs(self.Enemies) do
-		Draw.Text(tostring(getdmg("R", enemy, myHero) * 0.7), 20, enemy.pos2D.x, enemy.pos2D.y)
 		if enemy.visible then
 			self.EnemyData[enemy.networkID] = Game.Timer()
 		end
