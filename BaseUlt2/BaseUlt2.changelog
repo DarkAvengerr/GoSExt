@@ -2,4 +2,7 @@
   ["0.01"] = {
     "Initial Release",
   },
+  ["0.02"] = {
+    "Removed a debug drawing, thanks blueing!"
+  },
 }
