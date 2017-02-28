@@ -28,7 +28,7 @@ end
 
 function GetItemSlot(unit, id)
   for i = ITEM_1, ITEM_7 do
-    if unit:GetItemData(unit).itemID == id then
+    if unit:GetItemData(i).itemID == id then
       return i
     end
   end
@@ -284,7 +284,7 @@ local DamageLibTable = {
     {Slot = "Q", Stage = 1, DamageType = 2, Damage = function(source, target, level) return ({80, 135, 190, 245, 305})[level] + source.ap end},
     {Slot = "W", Stage = 1, DamageType = 2, Damage = function(source, target, level) return ({75, 125, 175, 225, 275})[level] + 0.7 * source.ap end},
     {Slot = "E", Stage = 1, DamageType = 2, Damage = function(source, target, level) return ({20, 35, 50, 65, 80})[level] + 0.3 * source.ap end},
-    {Slot = "R", Stage = 1, DamageType = 3, Damage = function(source, target, level) return ({300, 475, 650})[level] + 0.7 * source.ap end},
+    {Slot = "R", Stage = 1, DamageType = 3, Damage = function(source, target, level) return ({300, 475, 650})[level] + 0.5 * source.ap end},
   },
 
   ["Corki"] = {
@@ -292,8 +292,8 @@ local DamageLibTable = {
     {Slot = "W", Stage = 1, DamageType = 2, Damage = function(source, target, level) return ({60, 90, 120, 150, 180})[level] + 0.4 * source.ap end},
     {Slot = "W", Stage = 1, DamageType = 2, Stage = 2, Damage = function(source, target, level) return ({30, 45, 60, 75, 90})[level] + (1.5 * source.totalDamage) + 0.2 * source.ap end},
     {Slot = "E", Stage = 1, DamageType = 1, Damage = function(source, target, level) return ({20, 32, 44, 56, 68})[level] + 0.4 * source.totalDamage end},
-    {Slot = "R", Stage = 1, DamageType = 2, Damage = function(source, target, level) return ({100, 130, 160})[level] + 0.3 * source.ap + ({0.2, 0.6, 1})[level] * source.totalDamage end},
-    {Slot = "R", Stage = 2, DamageType = 2, Damage = function(source, target, level) return ({150, 195, 240})[level] + 0.45 * source.ap + ({0.3, 0.75, 1.2})[level] * source.totalDamage end},
+    {Slot = "R", Stage = 1, DamageType = 2, Damage = function(source, target, level) return ({75, 100, 125})[level] + 0.2 * source.ap + ({0.15, 0.45, 0.75})[level] * source.totalDamage end},
+    {Slot = "R", Stage = 2, DamageType = 2, Damage = function(source, target, level) return ({150, 200, 250})[level] + 0.4 * source.ap + ({0.3, 0.90, 1.5})[level] * source.totalDamage end},
   },
 
   ["Darius"] = {
